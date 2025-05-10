@@ -51,7 +51,7 @@ class EdgeTTSConfig(I18nMixin):
             zh="Edge TTS 使用的语音名称（使用 'edge-tts --list-voices' 列出可用语音）",
         ),
     }
-
+    
 
 class CosyvoiceTTSConfig(I18nMixin):
     """Configuration for Cosyvoice TTS."""
@@ -301,6 +301,56 @@ class SherpaOnnxTTSConfig(I18nMixin):
     }
 
 
+class SileroRVCTTSConfig(I18nMixin):
+    """Configuration for Silero RVC TTS."""
+
+    model_id: str = Field("v3_1_ru", alias="model_id")
+    language: str = Field("ru", alias="language")
+    speaker: str = Field("baya", alias="speaker")
+    device: str = Field("", alias="device")
+
+    DESCRIPTIONS: ClassVar[Dict[str, Description]] = {
+        "model_id": Description(
+            en="Name of the TTS model to use",
+            zh="Name of the TTS model to use",
+        ),
+        "language": Description(
+            en="Language code (e.g., en, zh)",
+            zh="Language code (e.g., en, zh)",
+        ),
+        "speaker": Description(
+            en="Speaker name",
+            zh="Speaker name",
+        ),
+        "device": Description(
+            en="Device to use (cuda, cpu, or empty for auto)",
+            zh="Device to use (cuda, cpu, or empty for auto)",
+        ),
+    }
+
+
+class SpeechifyTTSConfig(I18nMixin):
+    """Configuration for Speechify TTS service."""
+
+    api_key: str = Field(..., alias="api_key")
+    voice: str = Field(..., alias="voice")
+    pitch: str = Field("normal", alias="pitch")
+    rate: str = Field("normal", alias="rate")
+    emotions: bool = Field(True, alias="emotions")
+
+    DESCRIPTIONS: ClassVar[Dict[str, Description]] = {
+        "api_key": Description(
+            en="API key for Speechify TTS service", zh="Speechify TTS 服务的 API 密钥"
+        ),
+        "voice": Description(
+            en="Voice name to use for Speechify TTS", zh="Speechify TTS 使用的语音名称"
+        ),
+        "pitch": Description(en="Pitch adjustment percentage", zh="音高调整百分比"),
+        "rate": Description(en="Speaking rate adjustment", zh="语速调整"),
+        "emotions": Description(en="Emotions", zh="Emotions"),
+    }
+
+
 class TTSConfig(I18nMixin):
     """Configuration for Text-to-Speech."""
 
@@ -316,6 +366,8 @@ class TTSConfig(I18nMixin):
         "gpt_sovits_tts",
         "fish_api_tts",
         "sherpa_onnx_tts",
+        "silero_rvc_tts",
+        "speechify_tts",
     ] = Field(..., alias="tts_model")
 
     azure_tts: Optional[AzureTTSConfig] = Field(None, alias="azure_tts")
@@ -328,6 +380,8 @@ class TTSConfig(I18nMixin):
     x_tts: Optional[XTTSConfig] = Field(None, alias="x_tts")
     gpt_sovits_tts: Optional[GPTSoVITSConfig] = Field(None, alias="gpt_sovits")
     fish_api_tts: Optional[FishAPITTSConfig] = Field(None, alias="fish_api_tts")
+    silero_rvc_tts: Optional[SileroRVCTTSConfig] = Field(None, alias="silero_rvc_tts")
+    speechify_tts: Optional[SpeechifyTTSConfig] = Field(None, alias="speechify_tts")
     sherpa_onnx_tts: Optional[SherpaOnnxTTSConfig] = Field(
         None, alias="sherpa_onnx_tts"
     )
@@ -357,6 +411,12 @@ class TTSConfig(I18nMixin):
         "sherpa_onnx_tts": Description(
             en="Configuration for Sherpa Onnx TTS", zh="Sherpa Onnx TTS 配置"
         ),
+        "silero_rvc_tts": Description(
+            en="Configuration for Silero RVC TTS", zh="Silero RVC TTS 配置"
+        ),
+        "speechify_tts": Description(
+            en="Configuration for Speechify TTS", zh="Speechify TTS 配置"
+        )
     }
 
     @model_validator(mode="after")
@@ -386,5 +446,9 @@ class TTSConfig(I18nMixin):
             values.fish_api_tts.model_validate(values.fish_api_tts.model_dump())
         elif tts_model == "sherpa_onnx_tts" and values.sherpa_onnx_tts is not None:
             values.sherpa_onnx_tts.model_validate(values.sherpa_onnx_tts.model_dump())
+        elif tts_model == "silero_rvc_tts" and values.silero_rvc_tts is not None:
+            values.silero_rvc_tts.model_validate(values.silero_rvc_tts.model_dump())
+        elif tts_model == "speechify_tts" and values.speechify_tts is not None:
+            values.speechify_tts.model_validate(values.speechify_tts.model_dump())
 
         return values

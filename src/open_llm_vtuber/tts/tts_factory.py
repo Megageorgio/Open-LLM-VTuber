@@ -112,6 +112,27 @@ class TTSFactory:
             from .sherpa_onnx_tts import TTSEngine as SherpaOnnxTTSEngine
 
             return SherpaOnnxTTSEngine(**kwargs)
+        
+        elif engine_type == "silero_rvc_tts":
+            from .silero_rvc_tts import TTSEngine as SileroRVCTTSEngine
+
+            return SileroRVCTTSEngine(
+                model_id=kwargs.get("model_id"),
+                language=kwargs.get("language"),
+                speaker=kwargs.get("speaker"),
+                device=kwargs.get("device"),
+            )
+            
+        elif engine_type == "speechify_tts":
+            from .speechify_tts import TTSEngine as SpeechifyTTSEngine
+
+            return SpeechifyTTSEngine(
+                kwargs.get("api_key"),
+                kwargs.get("voice"),
+                kwargs.get("pitch"),
+                kwargs.get("rate"),
+                kwargs.get("emotions"),
+            )
 
         else:
             raise ValueError(f"Unknown TTS engine type: {engine_type}")

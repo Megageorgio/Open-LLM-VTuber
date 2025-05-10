@@ -363,6 +363,19 @@ character_config:
       speed: 1.0 # Speech speed (1.0 is normal)
       debug: false # Enable debug mode (True/False)
 
+    silero_rvc_tts:
+      model_id: 'v3_1_ru'
+      language: 'ru'
+      speaker: 'baya'
+      device: ''
+
+    speechify_tts:
+      api_key: '' # Speechify API Key
+      voice: '' # Voice ID
+      pitch: 'medium' # low, high, -20%, +20%
+      rate: 'medium' # slow, fast, -20%, +20% 
+      emotions: true
+
 
   # =================== Voice Activity Detection ===================
   vad_config:

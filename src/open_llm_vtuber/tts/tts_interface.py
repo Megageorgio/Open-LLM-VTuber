@@ -25,7 +25,7 @@ class TTSInterface(metaclass=abc.ABCMeta):
         return await asyncio.to_thread(self.generate_audio, text, file_name_no_ext)
 
     @abc.abstractmethod
-    def generate_audio(self, text: str, file_name_no_ext=None) -> str:
+    def generate_audio(self, text: str, file_name_no_ext=None, emotion=None) -> str:
         """
         Generate speech audio file using TTS.
         text: str
